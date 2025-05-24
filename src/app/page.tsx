@@ -111,12 +111,12 @@ export default function Home() {
                 "framework":   { top: '2%',   left: '2%',   width: '31%', height: '22%' },
                 "voice-tone":  { top: '2%',   left: '35%',  width: '63%', height: '22%' },
                 "logo-side":   { top: '25%',  left: '2%',   width: '56%', height: '15%' },
-                "logo-center": { top: '41%',  left: '38%',  width: '18%', height: '8%' },
-                "typography":  { top: '25%',  left: '59%',  width: '39%', height: '24%' },
-                "iconography": { top: '41%',  left: '2%',   width: '33%', height: '32%' },
-                "color":       { top: '50%',  left: '37%',  width: '61%', height: '23%' },
-                "imagery":     { top: '74%',  left: '2%',   width: '63%', height: '22%' },
-                "motion":      { top: '74%',  left: '67%',  width: '31%', height: '22%' },
+                "logo-center": { top: '40.5%',  left: '38%',  width: '20%', height: '9%' },
+                "typography":  { top: '25%',  left: '59%',  width: '39%', height: '24.5%' },
+                "iconography": { top: '40.5%',  left: '2%',   width: '35%', height: '32.5%' },
+                "color":       { top: '50%',  left: '38%',  width: '60%', height: '23%' },
+                "imagery":     { top: '74%',  left: '2%',   width: '64%', height: '23%' },
+                "motion":      { top: '74%',  left: '67%',  width: '31%', height: '23%' },
             };
 
             // Set initial z-index states
