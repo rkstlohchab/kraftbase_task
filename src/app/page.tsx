@@ -103,9 +103,10 @@ export default function Home() {
                 });
             });
 
-            gsap.set("#intro1", { autoAlpha: 1 });
+            // Ensure intro elements are visible at start
+            gsap.set("#intro1", { autoAlpha: 1, scale: 1 });
             gsap.set("#intro2", { autoAlpha: 0, scale: 0.8 });
-
+            
             // --- Define Final Positions (as % for responsiveness) ---
             const finalPos: FinalPositions = {
                 "framework":   { top: '2%',   left: '2%',   width: '31%', height: '22%' },
@@ -126,22 +127,25 @@ export default function Home() {
 
             const tl = gsap.timeline();
 
-            // Intro animations
+            // Quick intro animations
             tl.to("#intro1", { 
                 autoAlpha: 0, 
                 scale: 0.8, 
-                duration: 1 
+                duration: 0.5,
+                ease: "power1.out"
             })
             .to("#intro2", { 
                 autoAlpha: 1, 
                 scale: 1, 
-                duration: 1 
-            }, "-=0.5")
+                duration: 0.5,
+                ease: "power1.out"
+            }, "-=0.3")
             .to("#intro2", { 
                 autoAlpha: 0, 
                 y: -50, 
-                duration: 1,
-            }, "+=1")
+                duration: 0.5,
+                ease: "power1.out"
+            }, "+=0.5")
             // After intro animations, set intro elements to back
             .set(["#intro1", "#intro2"], { zIndex: -1 });
 
