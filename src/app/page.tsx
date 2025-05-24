@@ -1,7 +1,5 @@
 "use client";
 import React, { useRef, useEffect } from 'react';
-import Head from 'next/head';
-import Link from 'next/link';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import {
@@ -37,7 +35,8 @@ interface BlockProps {
 }
 
 const Block: React.FC<BlockProps> = ({ id, className, children }) => (
-    <div id={id} className={`block-item absolute w-1/4 h-1/5 ${className} rounded-lg flex items-center justify-center p-4 shadow-xl text-center`}>
+    // Starts as absolute, positioned by GSAP later.
+    <div id={id} className={`block-item absolute md:w-1/3 lg:w-1/4 w-11/12 h-1/6 md:h-1/5 ${className} flex items-center justify-center p-4 shadow-xl text-center transition-all duration-300`}>
         <div className="flex flex-col items-center">
              {children}
         </div>
@@ -107,24 +106,46 @@ export default function Home() {
             gsap.set("#intro1", { autoAlpha: 1 });
             gsap.set("#intro2", { autoAlpha: 0, scale: 0.8 });
 
+            // --- Define Final Positions (as % for responsiveness) ---
             const finalPos: FinalPositions = {
-                "framework":   { top: '10%', left: '5%',  width: '28%', height: '20%' },
-                "voice-tone":  { top: '10%', left: '36%', width: '28%', height: '20%' },
-                "logo-side":   { top: '32%', left: '5%',  width: '28%', height: '20%' },
-                "logo-center":  { top: '32%', left: '36%', width: '28%', height: '20%' },
-                "typography":  { top: '32%', left: '67%', width: '28%', height: '20%' },
-                "iconography": { top: '54%', left: '5%',  width: '28%', height: '20%' },
-                "color":       { top: '54%', left: '36%', width: '28%', height: '20%' },
-                "imagery":     { top: '76%', left: '5%',  width: '28%', height: '20%' },
-                "motion":      { top: '76%', left: '36%', width: '28%', height: '20%' },
+                "framework":   { top: '2%',   left: '2%',   width: '31%', height: '22%' },
+                "voice-tone":  { top: '2%',   left: '35%',  width: '63%', height: '22%' },
+                "logo-side":   { top: '25%',  left: '2%',   width: '56%', height: '15%' },
+                "logo-center": { top: '41%',  left: '38%',  width: '18%', height: '8%' },
+                "typography":  { top: '25%',  left: '59%',  width: '39%', height: '24%' },
+                "iconography": { top: '41%',  left: '2%',   width: '33%', height: '32%' },
+                "color":       { top: '50%',  left: '37%',  width: '61%', height: '23%' },
+                "imagery":     { top: '74%',  left: '2%',   width: '63%', height: '22%' },
+                "motion":      { top: '74%',  left: '67%',  width: '31%', height: '22%' },
             };
+
+            // Set initial z-index states
+            gsap.set("#intro1", { zIndex: 30 });
+            gsap.set("#intro2", { zIndex: 25 });
+            gsap.set(blocks, { zIndex: 10 });
 
             const tl = gsap.timeline();
 
-            tl.to("#intro1", { autoAlpha: 0, scale: 0.8, duration: 1 })
-              .to("#intro2", { autoAlpha: 1, scale: 1, duration: 1 }, "-=0.5")
-              .to("#intro2", { autoAlpha: 0, y: -50, duration: 1 }, "+=1");
+            // Intro animations
+            tl.to("#intro1", { 
+                autoAlpha: 0, 
+                scale: 0.8, 
+                duration: 1 
+            })
+            .to("#intro2", { 
+                autoAlpha: 1, 
+                scale: 1, 
+                duration: 1 
+            }, "-=0.5")
+            .to("#intro2", { 
+                autoAlpha: 0, 
+                y: -50, 
+                duration: 1,
+            }, "+=1")
+            // After intro animations, set intro elements to back
+            .set(["#intro1", "#intro2"], { zIndex: -1 });
 
+            // Then animate the blocks
             blocks.forEach((block, index) => {
                 tl.to(block, {
                     ...finalPos[block.id],
@@ -134,9 +155,10 @@ export default function Home() {
                     yPercent: 0,
                     duration: 1.5,
                     ease: "power2.inOut"
-                }, index * 0.2); 
+                }, index * 0.2);
             });
 
+            // --- Create ScrollTrigger ---
             ScrollTrigger.create({
                 animation: tl,
                 trigger: mainRef.current,
@@ -175,25 +197,7 @@ export default function Home() {
 
     return (
         <>
-            <Head>
-                <title>Dropbox Brand Clone [GSAP Debug]</title>
-                <meta name="description" content="A Next.js & GSAP clone - Debugging version." />
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
-
-            {/* Navbar */}
-            <nav className="fixed top-0 left-0 right-0 h-16 bg-white bg-opacity-80 backdrop-blur-sm shadow-sm flex items-center justify-between px-6 z-50">
-                <Link href="/" className="flex items-center space-x-2">
-                   <SiDropbox className="text-3xl text-blue-600" />
-                   <span className="font-bold text-xl text-gray-800">Brand</span>
-                </Link>
-                <div className="space-x-4">
-                    <Link href="/" className="text-gray-600 hover:text-blue-600">Home</Link>
-                </div>
-            </nav>
-
-         
-            <div ref={mainRef} className="relative bg-white mt-16">
+            <div ref={mainRef} className="relative bg-white">
 
                 <div ref={pinRef} className="h-screen w-full overflow-hidden">
                    <div ref={canvasRef} className="relative w-full h-full">
@@ -224,16 +228,16 @@ export default function Home() {
                         <Block id="voice-tone" className="bg-yellow-400 text-gray-800">
                            <GoMegaphone className="text-4xl mb-1" /> Voice & Tone
                         </Block>
-                         <Block id="logo-side" className="bg-cyan-400 text-gray-900">
+                        <Block id="logo-side" className="bg-cyan-400 text-gray-900">
                            <SiDropbox className="text-5xl mb-1" /> Logo
                         </Block>
-                         <Block id="logo-center" className="bg-blue-600 text-white">
+                        <Block id="logo-center" className="bg-blue-600 text-white">
                              <SiDropbox className="text-7xl" />
                         </Block>
-                         <Block id="typography" className="bg-red-500 text-white">
+                        <Block id="typography" className="bg-red-500 text-white">
                               <span className="text-5xl font-serif">Aa</span> Typography
-                         </Block>
-                         <Block id="iconography" className="bg-lime-500 text-gray-900">
+                        </Block>
+                        <Block id="iconography" className="bg-lime-500 text-gray-900">
                              <FaLock className="text-4xl mb-1" /> Iconography
                          </Block>
                          <Block id="color" className="bg-orange-500 text-white">
